@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+	.container{
+		display: flex;
+		background: lightblue;
+	}
+	.box{
+		width:100px;
+		height:50px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+</style>
+</head>
+<body>
+<!-- data/version.json 가져오기 -->
+<div class="container">	
+	<div class="box">메뉴1</div>
+	<div class="box">메뉴2</div>
+	<div class="box">메뉴3</div>
+	<div class="box">메뉴4</div>	
+</div>
+<div id="content"></div>
+<script>
+	let last_li = document.querySelector(".container .box:last-child")
+	                      .addEventListener('click',makeRequest);
+	
+	let httpRequest = new XMLHttpRequest();
+
+	function getJson(){
+		let content = document.querySelector("#content");
+		if(httpRequest.readyState==4){
+			if(httpRequest.status==200){
+				let response=httpRequest.responseXML;
+				
+				console.log(response);
+				
+				/* let school = response.getElementsByTagName("school");				
+				content.innerText = school[0].innerHTML;	 */	
+				
+				let title=response.getElementsByTagName("title");
+				let time=response.getElementsByTagName("time");
+				let teacher=response.getElementsByTagName("teacher");
+				
+				let data="<ul><li>title : "+title[0].childNodes[0].nodeValue+"</li>";
+				data+="<li>time : "+time[0].childNodes[0].nodeValue+"</li>";
+				data+="<li>teacher : "+teacher[0].childNodes[0].nodeValue+"</li>";
+				
+				content.innerHTML=data;
+				
+			}else{
+				content.innerHTML="데이터 없음";
+			}
+		}
+	}
+	function makeRequest(){
+		httpRequest.onreadystatechange = getJson;
+		httpRequest.open('get','data/school.xml');
+		httpRequest.setRequestHeader('content-Type', 'application/xml');
+		httpRequest.send(null);
+	}
+</script>
+</body>
+</html>

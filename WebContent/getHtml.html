@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body onload="gethtml()"> 		<!-- 이 페이지가 로딩 되면 겟에치티엠엘을 호출한다. -->
+<!-- 이 페이지가 로드되면서 data/data.html 정보를 가져오기 -->
+<div class="container">
+	<ul>
+		<li>메뉴1</li>
+		<li>메뉴2</li>
+		<li>메뉴3</li>
+		<li>메뉴4</li>
+	</ul>
+
+</div>
+<div>
+	
+</div>
+<script>
+	function gethtml(){
+		//XMLHttpRequest 객체 생성
+		let httpRequest = new XMLHttpRequest();		// 이게 무조건 있어야 함.
+		
+		//서버에게 보낼 요청 생성
+		httpRequest.open("get", "data/data.html", true);		// 방식, 목적지, 동기 vs 비동기(true. 디폴트)
+		httpRequest.send(null);									// 보냄! null은 get방식을 택했기 때문에. post 시 내용 넣어서 보내줌.
+		
+		//서버의 응답에 따른 로직
+		httpRequest.onreadystatechange = function () {
+			if(httpRequest.readyState == 4){		// 성공의 의미. 4번이 오게 되면, 
+				if(httpRequest.status==200){		// 정상 200이 오게 되면 태그에다가 집어 넣는 작업
+					let div = document.querySelector("div:last-of-type");
+					div.innerHTML = httpRequest.responseText;
+				}
+			}
+		}
+	}
+</script>
+</body>
+</html>

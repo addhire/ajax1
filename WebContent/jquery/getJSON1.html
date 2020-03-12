@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+	.container{
+		display: flex;
+		background: lightblue;
+	}
+	.box{
+		width: 100px;
+		height: 50px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+</style>
+</head>
+<body>
+<!-- data/version.json 가져오기 -->
+<div class="container">
+		<div class="box">메뉴1</div>
+		<div class="box">메뉴2</div>
+		<div class="box">메뉴3</div>
+		<div class="box">메뉴4</div>
+</div>
+<div id="content"></div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+	$(".container .box:last-child").click(function(){
+		$.get({
+			url:"../data/version.json",
+			success: function(data){
+				console.log(data);
+				
+				let result="<ul><li>version: "+data.version+"</li>";
+				result+="<li>codename: "+data.codename+"</li></ul>";
+				
+				$("#content").html(result);
+			},
+			error:function(xhr,textStatus, thrown){
+				console.log(xhr.status);
+			}
+		})
+	})
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+

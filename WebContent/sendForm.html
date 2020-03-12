@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div>
+		<button id="get">GET</button>
+		<button id="post">POST</button>
+		<button id="put">PUT</button>
+		<button id="delete">DELETE</button>		
+	</div>
+	<h1>input</h1>
+	<div>
+		<form action="send.jsp">
+			<div>
+				<label for="id">아이디</label>
+				<input type="text" id="id" name="id"/>
+			</div>
+			<div>
+				<label for="age">나이</label>
+				<input type="text" id="age" name="age"/>
+			</div>
+		</form>
+	</div>
+<script>
+	window.onload=function(){
+		document.getElementById('get').onclick=function(){
+			
+		}
+		document.getElementById('post').onclick=function(){
+			let xhr = getXMLHttpRequest();
+			
+			let id = document.querySelector('#id').value;
+			let age = document.querySelector('#age').value;
+			
+			xhr.open('post',"send.jsp ");
+			xhr.setRequestHeader('content-Type', 'application/x-www-form-urlencoded');
+			xhr.send("id="+id+"&age="+age);
+		}
+		document.getElementById('delete').onclick=function(){
+	
+		}
+		document.getElementById('put').onclick=function(){
+			
+		}
+
+	};
+	function getXMLHttpRequest(){
+		return new XMLHttpRequest();
+	}
+</script>	
+	
+</body>
+</html>

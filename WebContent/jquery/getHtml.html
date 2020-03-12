@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body onload="gethtml()"> 		<!-- 이 페이지가 로딩 되면 겟에치티엠엘을 호출한다. -->
+<!-- 이 페이지가 로드되면서 data/data.html 정보를 가져오기 -->
+<div class="container">
+	<ul>
+		<li>메뉴1</li>
+		<li>메뉴2</li>
+		<li>메뉴3</li>
+		<li>메뉴4</li>
+	</ul>
+
+</div>
+<div>
+	
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+	function gethtml(){
+		$.ajax({
+			url:'../data/data.html',
+			success:function(data){
+				$('body').append(data);
+			}
+		})
+			//괄호 틀린듯
+		$.get({
+		url:'../data/data.html',
+		success:function(data){
+			$('body').append(data);
+		}) 
+	}
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+

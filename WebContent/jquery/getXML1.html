@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+	.container{
+		display: flex;
+		background: lightblue;
+	}
+	.box{
+		width: 100px;
+		height: 50px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+</style>
+</head>
+<body>
+<!-- data/version.json 가져오기 -->
+<div class="container">
+		<div class="box">메뉴1</div>
+		<div class="box">메뉴2</div>
+		<div class="box">메뉴3</div>
+		<div class="box">메뉴4</div>
+</div>
+<div id="content"></div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+	$(".container .box:last-child").click(function(){
+		$.get({
+			url:"../data/school.xml",
+			success: function(data){
+				console.log(data);
+				let title=$(data).find("title").text();
+				let time=$(data).find("time").text();
+				let teacher=$(data).find("teacher").text();
+				
+				let result="<ul><li>title: "+title+"</li>";
+				result+="<li>time: "+time+"</li>";
+				result+="<li>teacher: "+teacher+"</li></ul>";
+				
+				$("#content").html(result);
+			},
+			error:function(xhr,textStatus, thrown){
+				console.log(xhr.status);
+			}
+		})
+	})
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+

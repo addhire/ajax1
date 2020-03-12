@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+	.container{
+		display: flex;
+		background: lightblue;
+	}
+	.box{
+		width:100px;
+		height:50px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+</style>
+</head>
+<body>
+<!-- data/version.json 가져오기 -->
+<div class="container">	
+	<div class="box">메뉴1</div>
+	<div class="box">메뉴2</div>
+	<div class="box">메뉴3</div>
+	<div class="box">메뉴4</div>	
+</div>
+<div id="content"></div>
+<script>
+	let last_li = document.querySelector(".container .box:last-child")
+	                      .addEventListener('click',makeRequest);
+	
+	let httpRequest = new XMLHttpRequest();
+
+	function getJson(){
+		let content = document.querySelector("#content");
+		if(httpRequest.readyState==4){
+			if(httpRequest.status==200){
+				let response=httpRequest.responseXML;
+				
+				console.log(response);		
+
+		
+				
+				let name=response.getElementsByTagName("name");
+				let part=response.getElementsByTagName("part");
+				
+				let result="<ul>";
+				
+				for(let i=0;i<name.length;i++){
+					result+="<li>name : "+name[i].childNodes[0].nodeValue+"</li>";
+					result+="<li>part : "+part[i].childNodes[0].nodeValue+"</li>";				
+				}
+				content.innerHTML=result+"</ul>";
+				
+			}else{
+				content.innerHTML="데이터 없음";
+			}
+		}
+	}
+	function makeRequest(){
+		httpRequest.onreadystatechange = getJson;
+		httpRequest.open('get','data/member.xml');
+		httpRequest.setRequestHeader('content-Type', 
+
+'application/xml');
+		httpRequest.send(null);
+	}
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
