@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
-<body onload="gethtml()"> 		<!-- 이 페이지가 로딩 되면 겟에치티엠엘을 호출한다. -->
+<body onload="gethtml()"> 		<!-- 이 페이지가 로딩 되면 - 겟에치티엠엘 함수 - 를 호출한다. -->
 <!-- 이 페이지가 로드되면서 data/data.html 정보를 가져오기 -->
 <div class="container">
 	<ul>
@@ -30,9 +30,11 @@
 		//서버의 응답에 따른 로직
 		httpRequest.onreadystatechange = function () {
 			if(httpRequest.readyState == 4){		// 성공의 의미. 4번이 오게 되면, 
-				if(httpRequest.status==200){		// 정상 200이 오게 되면 태그에다가 집어 넣는 작업
-					let div = document.querySelector("div:last-of-type");
-					div.innerHTML = httpRequest.responseText;
+				if(httpRequest.status==200){		// 상태코드 - 성공 - 200이 오게 되면 태그에다가 집어 넣는 작업
+					let div = document.querySelector("div:last-of-type"); // *** 아 이게 div인 마지막 요소에 넣는다는 얘기네! ***
+// 그래서 결론적으로 위에 비어있는 div에 음료수 정보가 들어가게 된것!
+					div.innerHTML = httpRequest.responseText; //div 변수에 넣겠다. 반환텍스트를.
+					// responseText 프로퍼티는, -> 서버에 요청하여 응답으로 받은 데이터를 문자열로 반환합니다.
 				}
 			}
 		}
