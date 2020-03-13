@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+body{
+	margin: 10px;
+}
+.box1{
+	width: 400px;
+	background-color: green;
+	color: white;
+	padding: 15px;
+	text-align: center;
+}
+.box2{
+	width: 400px;
+	display: block;
+	margin-top: 15px;
+	text-align: center;
+}
+.box3{
+		text-align: left;
+}
+#msg{
+	border-radius: 5px;
+	border: 2px solid #73ad21;
+	padding: 10px;
+	padding-left: 20px;
+	margin-top: 15px;
+	width: 400px;
+	height: 200px;
+	font-size: 14px;
+	text-align: left;
+}
+</style>
+</head>
+<body>
+	<form action="">
+		<div class="box1">일별 박스 오피스</div>
+		<div class="box2">
+			<input type="text" name="txtYear" id="txtYear" size = "6"/>년
+			<select name="" id="selMon">
+				<option value="01">1월</option>
+				<option value="02">2월</option>
+				<option value="03">3월</option>
+				<option value="04">4월</option>
+				<option value="05">5월</option>
+				<option value="06">6월</option>
+				<option value="07">7월</option>
+				<option value="08">8월</option>
+				<option value="09">9월</option>
+				<option value="10">10월</option>
+				<option value="11">11월</option>
+				<option value="12">12월</option>
+			</select>
+			<select name="" id="selDay">
+				<option value="01">1일</option>
+				<option value="02">2일</option>
+				<option value="03">3일</option>
+				<option value="04">4일</option>
+				<option value="05">5일</option>
+				<option value="06">6일</option>
+				<option value="07">7일</option>
+				<option value="08">8일</option>
+				<option value="09">9일</option>
+				<option value="10">10일</option>
+				<option value="11">11일</option>
+				<option value="12">12일</option>
+				<option value="13">13일</option>
+				<option value="14">14일</option>
+				<option value="15">15일</option>
+				<option value="16">16일</option>
+				<option value="17">17일</option>
+				<option value="18">18일</option>
+				<option value="19">19일</option>
+				<option value="20">20일</option>
+				<option value="21">21일</option>
+				<option value="22">22일</option>
+				<option value="23">23일</option>
+				<option value="24">24일</option>
+				<option value="25">25일</option>
+				<option value="26">26일</option>
+				<option value="27">27일</option>
+				<option value="28">28일</option>
+				<option value="29">29일</option>
+				<option value="30">30일</option>
+				<option value="31">31일</option>
+			</select>
+			<button type="button" id="btn1">확인</button>
+			<div id="msg"></div><!-- 영화 순위 정보 보여줄 부분 -->
+			<div class="box3"></div><!-- 영화 상세정보 보여줄 부분 -->
+		</div>
+	</form>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script>
+	$(function(){
+		init();
+		let url = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=430156241533f1d058c603178cc3ca0e&targetDt=";
+		url += $("#txtYear").val()+$("#selMon").val()+$("#selDay").val();
+		
+		console.log(url);
+		
+		$.ajax({
+			url: url,
+			success: function(data){
+				console.log(data);
+				let str="";
+				// 집계 순위 내용이 없는 경우
+				//if($(data).find("dailyBoxOffice").text()===""){
+				if($(data.boxOfficeResult.dailyBoxOfficeList)===""){
+					alert("데이터가 없습니다.");
+				}
+				
+				$.each(data.boxOfficeResult.dailyBoxOfficeList, function(idx, item){
+					//순위 가져오기
+					str += item.rank+"위";
+					//전일자 증감
+					let rankIntern = parseInt(item.rankInten);
+					
+					if(rankIntern > 0){
+						str += "(▲";
+					}else if(rankIntern<0){
+						str += "(▼";
+					}else{
+						str += "(";
+					}
+					str += rankIntern+") ";
+						
+					// 영화 코드 가져오기
+					let movieCd = item.movieCd;
+					console.log(movieCd);				
+					
+					// 영화 이름 가져오기
+					let movieNm = item.movieNm+"<br>";
+					str +="<a href ='#' onclick='javascript:show("+movieCd+")'> " + movieNm+ "</a>" ;
+			
+					//추출된 결과 보여주기
+					$("#msg").html(str);
+						
+				})		
+			}
+		})
+	
+	})
+	function show(movieCd){
+			console.log(movieCd);
+			let url = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/movie/searchMovieInfo.json?key=430156241533f1d058c603178cc3ca0e&movieCd="+movieCd;
+			
+			$.ajax({
+				url: url,
+				success: function(data){
+					console.log(data);
+					
+					let str="<ul>";
+					
+					let movieInfo = data.movieInfoResult.movieInfo;
+					
+					// 영화제목
+					let movieNm = movieInfo.movieNm;
+					// 영어 영화제목
+					let movieNmEn = movieInfo.movieNmEn;
+					// 상영시간
+					let showTm = movieInfo.showTm;
+					// 감독
+					let director = movieInfo.directors[0].peopleNm;
+					
+					// 배우
+					let actors="";
+					let length = movieInfo.actors.length;
+					
+					$.each(movieInfo.actors, function(idx, item){
+						if(idx==length-1){
+							actors += item.peopleNm;
+						}else{
+							actors += item.peopleNm+", ";
+						}
+					})
+					
+					str += "<li>영화제목: "+ movieNm + "</li>";
+					str += "<li>영어제목: "+ movieNmEn + "</li>"; 
+					str += "<li>상영시간: "+ showTm + "분</li>"; 
+					str += "<li>감	 독: "+ director + "</li>"; 
+					str += "<li>출연배우: "+ actors + "</li>"; 
+					
+					$(".box3").html(str);
+				}
+			})
+			
+			}
+				
+	function init(){
+		// 어제 날짜 구하기
+		let newDate = new Date();
+		let year = newDate.getFullYear();
+		let month = newDate.getMonth()+1;
+		let day = newDate.getDate()-1;
+		
+		$("#txtYear").val(year);
+		
+		if(month<10){
+			month="0"+month;
+		}
+		if(day<10){
+			day = "0" + day;
+		}
+		$("#selMon").val(month);
+		$("#selDay").val(day);
+	}
+	</script>
+</body>
+</html>
