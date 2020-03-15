@@ -2,14 +2,14 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>박스 오피스 연습</title>
 <style>
 body{
 	margin: 10px;
 }
 .box1{
 	width: 400px;
-	background-color: green;
+	background-color: orange;
 	color: white;
 	padding: 15px;
 	text-align: center;
@@ -24,14 +24,14 @@ body{
 		text-align: left;
 }
 #msg{
-	border-radius: 5px;
-	border: 2px solid #73ad21;
+	border-radius: 30px;
+	border: 2px solid #FAA500;
 	padding: 10px;
 	padding-left: 20px;
 	margin-top: 15px;
 	width: 400px;
 	height: 200px;
-	font-size: 14px;
+	font-size: 15px;
 	text-align: left;
 }
 </style>
@@ -40,7 +40,7 @@ body{
 	<form action="">
 		<div class="box1">일별 박스 오피스</div>
 		<div class="box2">
-			<input type="text" name="txtYear" id="txtYear" size = "6"/>년	<!-- 6은 칸 길이 -->
+			<input type="text" name="txtYear" id="txtYear" size = "6"/>년
 			<select name="" id="selMon">
 				<option value="01">1월</option>
 				<option value="02">2월</option>
@@ -89,19 +89,18 @@ body{
 				<option value="31">31일</option>
 			</select>
 			<button type="button" id="btn1">확인</button>
-			<div id="msg"></div><!-- 영화 순위 정보 보여줄 부분 -->
-			<div class="box3"></div><!-- 영화 상세정보 보여줄 부분 -->
+			<div id="msg"></div><!-- 영화 순위 보여줄 부분 -->
+			<div class="box3"></div><!-- 영화 상세정보 구역 -->
 		</div>
 	</form>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script>
-	$(function(){									// 이건 익명함수인듯!
-		init();		// 어제날짜 구하기를 딱 시전해줌!
+	$(function(){
+		init();
 		let url = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.xml?key=430156241533f1d058c603178cc3ca0e&targetDt=";
 		url += $("#txtYear").val()+$("#selMon").val()+$("#selDay").val();
-		
-		console.log(url);
-		
+	
+		console.log(url);	
 		$.ajax({
 			url: url,
 			success: function(data){
@@ -114,10 +113,10 @@ body{
 				
 				$(data).find("dailyBoxOffice").each(function(){
 					//순위 가져오기
-					str += $(this).find("rank").text()+"위";				// 여기서는 this의 의미가  dailyBoxOffice 라고 보면 될듯?
+					str += $(this).find("rank").text()+"위";
 					//전일자 증감
-					let rankIntern = parseInt($(this).find("rankInten").text());	// 이런건 보통 스트링으로 받아오니 파스해줘야함.
-	// 자바에서 쓸 수 있게 변수화 해주는 듯. (let rankIntern)
+					let rankIntern = parseInt($(this).find("rankInten").text());
+					
 					if(rankIntern > 0){
 						str += "(▲";
 					}else if(rankIntern<0){
@@ -127,17 +126,18 @@ body{
 					}
 					str += rankIntern+") ";
 						
-					// 영화 코드 가져오기		코드는 136행에서 쓰려고 불러옴. 괜히 불러온 게 아님...
+					// 영화 코드 가져오기
 					let movieCd = $(this).find("movieCd").text();
 					console.log(movieCd);				
 					
 					// 영화 이름 가져오기
 					let movieNm = $(this).find("movieNm").text()+"<br>";
 					str +="<a href ='#' onclick='javascript:show("+movieCd+")'> " + movieNm+ "</a>" ;
-									// 클릭했을 때 쇼 함수를 보여주겠다 이런 의미겠네...     147행 함수. 
-									// javascript:show 이게 그런 것인듯
+			
+					
+					
 					//추출된 결과 보여주기
-					$("#msg").html(str);		// 메시지 라는 아이디를 가진 html 파일에 str을 매개변수 넣어줘라 그런 의미인듯하다. 
+					$("#msg").html(str);
 						
 				})		
 			}
@@ -150,7 +150,7 @@ body{
 			
 			$.ajax({
 				url: url,
-				success: function(data){		// 그냥 데이터를 객체처럼 봐도 되는건가. 이름표?
+				success: function(data){
 					console.log(data);
 					
 					let str="<ul>";
@@ -167,10 +167,10 @@ body{
 					// 배우
 					let actors="";
 					let length = $(data).find("actor").find("peopleNm").length;
-												// each(function(idx) ㄱ
-					$(data).find("actor").each(function(idx){		// *** 제이쿼리의 '''반복문''' 이라고 보면 된다고 함.      참고: https://annotations.tistory.com/59
-						if(idx==length-1){						// idx가 몇인줄 어떻게 알지? 숫자라면 파싱 안해도 되나?
-							actors += $(this).find("peopleNm").text();	// 마지막 사람 전까지만 쉼표를 치겠다는 의미인듯.
+					
+					$(data).find("actor").each(function(idx){
+						if(idx==length-1){
+							actors += $(this).find("peopleNm").text();
 						}else{
 							actors += $(this).find("peopleNm").text()+", ";
 						}
@@ -181,31 +181,51 @@ body{
 					str += "<li>상영시간: "+ showTm + "분</li>"; 
 					str += "<li>감	 독: "+ director + "</li>"; 
 					str += "<li>출연배우: "+ actors + "</li>"; 
-																	// 닫는 ul태그가 없는데 괜찮은가봐!
+					
 					$(".box3").html(str);
 				}
 			})
 			
 			}
 				
-	function init(){			// 아 이것 때문에 2020년이 써질 수 있었구나....
+	function init(){
 		// 어제 날짜 구하기
 		let newDate = new Date();
 		let year = newDate.getFullYear();
-		let month = newDate.getMonth()+1;		// 월은 0부터 시작한다고 들었던 것 같음.
+		let month = newDate.getMonth()+1;
 		let day = newDate.getDate()-1;
 		
-		$("#txtYear").val(year);	// 43행. txtYear이라는 아이디를 가진 위치에 밸류값으로 year 변수를 넣어준다.
+		$("#txtYear").val(year);
 		
 		if(month<10){
 			month="0"+month;
 		}
 		if(day<10){
 			day = "0" + day;
-		}							// 위에서 월과 일을 만들어줌. 0까지 붙여서.
-		$("#selMon").val(month);	// 그걸 selMon id 위치에 밸류값으로 잡아준다.
+		}
+		$("#selMon").val(month);
 		$("#selDay").val(day);
 	}
 	</script>
+
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
